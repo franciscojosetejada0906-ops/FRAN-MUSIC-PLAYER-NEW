@@ -1,0 +1,40 @@
+
+name: Build FRAN MUSIC PLAYER APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Compilar APK
+        run: |
+          mkdir -p app/src/main/java/com/fran/musicplayer
+          echo "Preparando compilación"
+          if [ ! -f settings.gradle ]; then
+            echo "Falta settings.gradle en el repositorio"
+            exit 1
+          fi
+          gradle assembleDebug
+
+      - name: Guardar APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: FRAN-MUSIC-PLAYER-APK
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error

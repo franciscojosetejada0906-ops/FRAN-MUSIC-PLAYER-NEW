@@ -1,4 +1,3 @@
-
 name: Build FRAN MUSIC PLAYER APK
 
 on:
@@ -21,18 +20,15 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Configurar Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
       - name: Compilar APK
-        run: |
-          mkdir -p app/src/main/java/com/fran/musicplayer
-          echo "Preparando compilación"
-          if [ ! -f settings.gradle ]; then
-            echo "Falta settings.gradle en el repositorio"
-            exit 1
-          fi
-          gradle assembleDebug
+        run: gradle assembleDebug
 
       - name: Guardar APK
-        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: FRAN-MUSIC-PLAYER-APK
